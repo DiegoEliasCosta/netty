@@ -102,13 +102,13 @@ public class HeadersBenchmark extends AbstractMicrobenchmark {
         emptyHttp2HeadersNoValidate = new DefaultHttp2Headers(false);
     }
 
-    @Setup(Level.Invocation)
-    public void setupEmptyHeaders() {
-        emptyHttpHeaders.clear();
-        emptyHttp2Headers .clear();
-        emptyHttpHeadersNoValidate.clear();
-        emptyHttp2HeadersNoValidate.clear();
-    }
+//    @Setup(Level.Invocation)
+//    public void setupEmptyHeaders() {
+//        emptyHttpHeaders.clear();
+//        emptyHttp2Headers .clear();
+//        emptyHttpHeadersNoValidate.clear();
+//        emptyHttp2HeadersNoValidate.clear();
+//    }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
@@ -182,30 +182,35 @@ public class HeadersBenchmark extends AbstractMicrobenchmark {
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void httpAddAllFastest(Blackhole bh) {
+    	emptyHttpHeadersNoValidate.clear();
         bh.consume(emptyHttpHeadersNoValidate.add(httpHeaders));
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void httpAddAllFast(Blackhole bh) {
+    	emptyHttpHeaders.clear();
         bh.consume(emptyHttpHeaders.add(httpHeaders));
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void http2AddAllFastest(Blackhole bh) {
+    	emptyHttp2HeadersNoValidate.clear();
         bh.consume(emptyHttp2HeadersNoValidate.add(http2Headers));
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void http2AddAllFast(Blackhole bh) {
+    	emptyHttp2Headers.clear();
         bh.consume(emptyHttp2Headers.add(http2Headers));
     }
 
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void http2AddAllSlow(Blackhole bh) {
+    	emptyHttp2Headers.clear();
         bh.consume(emptyHttp2Headers.add(slowHttp2Headers));
     }
 

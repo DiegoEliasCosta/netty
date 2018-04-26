@@ -153,14 +153,18 @@ public class NoPriorityByteDistributionBenchmark extends AbstractMicrobenchmark 
         }
     }
 
-    @Setup(Level.Invocation)
-    public void setupInvocation() throws Http2Exception {
-        resetWindow(connection.connectionStream());
-        connection.forEachActiveStream(invocationVisitor);
-    }
+//    @Setup(Level.Invocation)
+//    public void setupInvocation() throws Http2Exception {
+//        resetWindow(connection.connectionStream());
+//        connection.forEachActiveStream(invocationVisitor);
+//    }
 
     @Benchmark
     public void write(AdditionalCounters counters) throws Http2Exception {
+    	// Adding the setup IN the benchmark to avoid the synchronization 
+        resetWindow(connection.connectionStream());
+        connection.forEachActiveStream(invocationVisitor);
+    	
         // Set up for this invocation. Doing this in the benchmark method since this
         // seems to throw off the counters when run as a setup step for the invocation.
         this.counters = counters;
