@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package ;
+package io.netty.microbench.concurrent;
 
 import io.netty.microbench.util.AbstractMicrobenchmark;
 import io.netty.util.concurrent.FastThreadLocal;
