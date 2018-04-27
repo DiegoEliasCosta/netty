@@ -15,7 +15,6 @@
  */
 package io.netty.handler.codec.http;
 
-import io.netty.handler.codec.http.HttpMethodMapBenchmark.SimpleStringMap.Node;
 import io.netty.microbench.util.AbstractMicrobenchmark;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Level;
