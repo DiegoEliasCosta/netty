@@ -32,6 +32,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.infra.Blackhole;
 
 @State(Scope.Thread)
 @Warmup(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
@@ -127,26 +128,26 @@ public class PooledByteBufAllocatorAlignBenchmark extends
     }
 
     @Benchmark
-    public void write() {
+    public void write(Blackhole bh) {
         int off = 0;
         int lSize = size;
         int lSizeMask = sizeMask;
         int lAlignOffset = alignOffset;
         for (int i = 0; i < lSize; i++) {
             off = (off + OFFSET_ADD) & lSizeMask;
-            pooledDirectBuffer.setBytes(off + lAlignOffset, bytes);
+            bh.consume(pooledDirectBuffer.setBytes(off + lAlignOffset, bytes));
         }
     }
 
     @Benchmark
-    public void read() {
+    public void read(Blackhole bh) {
         int off = 0;
         int lSize = size;
         int lSizeMask = sizeMask;
         int lAlignOffset = alignOffset;
         for (int i = 0; i < lSize; i++) {
             off = (off + OFFSET_ADD) & lSizeMask;
-            pooledDirectBuffer.getBytes(off + lAlignOffset, bytes);
+            bh.consume(pooledDirectBuffer.getBytes(off + lAlignOffset, bytes));
         }
     }
 }

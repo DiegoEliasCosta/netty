@@ -23,6 +23,7 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.infra.Blackhole;
 
 /**
  * This class benchmarks different allocators with different allocation sizes.
@@ -36,8 +37,8 @@ public class RecyclableArrayListBenchmark extends AbstractMicrobenchmark {
     public int size;
 
     @Benchmark
-    public void recycleSameThread() {
+    public void recycleSameThread(Blackhole bh) {
         RecyclableArrayList list = RecyclableArrayList.newInstance(size);
-        list.recycle();
+        bh.consume(list.recycle());
     }
 }
