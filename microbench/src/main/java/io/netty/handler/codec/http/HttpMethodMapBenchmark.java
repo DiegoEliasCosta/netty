@@ -15,11 +15,14 @@
  */
 package io.netty.handler.codec.http;
 
+import io.netty.handler.codec.http.HttpMethodMapBenchmark.SimpleStringMap.Node;
 import io.netty.microbench.util.AbstractMicrobenchmark;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
@@ -43,14 +46,17 @@ import static io.netty.util.internal.MathUtil.findNextPositivePowerOfTwo;
 @Measurement(iterations = 8)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class HttpMethodMapBenchmark extends AbstractMicrobenchmark {
-    private static final Map<String, HttpMethod> OLD_MAP = new HashMap<String, HttpMethod>();
-    private static final SimpleStringMap<HttpMethod> NEW_MAP;
-    private static final String[] KNOWN_METHODS;
-    private static final String[] MIXED_METHODS;
-    private static final String[] UNKNOWN_METHODS;
+    private Map<String, HttpMethod> OLD_MAP = new HashMap<String, HttpMethod>();
+    private SimpleStringMap<HttpMethod> NEW_MAP;
+    private String[] KNOWN_METHODS;
+    private String[] MIXED_METHODS;
+    private String[] UNKNOWN_METHODS;
 
-    static {
-        // We intentionally don't use HttpMethod.toString() here to avoid the equals(..) comparison method from being
+    @SuppressWarnings("unchecked")
+	@Setup(Level.Trial)
+    public void setup() {
+    	
+    	// We intentionally don't use HttpMethod.toString() here to avoid the equals(..) comparison method from being
         // able to short circuit due to reference equality checks and being biased toward the new approach. This
         // simulates the behavior of HttpObjectDecoder which will build new String objects during the decode operation.
         KNOWN_METHODS = new String[] {
@@ -98,26 +104,39 @@ public class HttpMethodMapBenchmark extends AbstractMicrobenchmark {
         OLD_MAP.put(TRACE.toString(), TRACE);
         OLD_MAP.put(CONNECT.toString(), CONNECT);
 
+        
         NEW_MAP = new SimpleStringMap<HttpMethod>(
-                new SimpleStringMap.Node<HttpMethod>(OPTIONS.toString(), OPTIONS),
-                new SimpleStringMap.Node<HttpMethod>(GET.toString(), GET),
-                new SimpleStringMap.Node<HttpMethod>(HEAD.toString(), HEAD),
-                new SimpleStringMap.Node<HttpMethod>(POST.toString(), POST),
-                new SimpleStringMap.Node<HttpMethod>(PUT.toString(), PUT),
-                new SimpleStringMap.Node<HttpMethod>(PATCH.toString(), PATCH),
-                new SimpleStringMap.Node<HttpMethod>(DELETE.toString(), DELETE),
-                new SimpleStringMap.Node<HttpMethod>(TRACE.toString(), TRACE),
-                new SimpleStringMap.Node<HttpMethod>(CONNECT.toString(), CONNECT));
+                new Node(OPTIONS.toString(), OPTIONS),
+                new Node(GET.toString(), GET),
+                new Node(HEAD.toString(), HEAD),
+                new Node(POST.toString(), POST),
+                new Node(PUT.toString(), PUT),
+                new Node(PATCH.toString(), PATCH),
+                new Node(DELETE.toString(), DELETE),
+                new Node(TRACE.toString(), TRACE),
+                new Node(CONNECT.toString(), CONNECT));
+    	
     }
+    
+    public class Node<T> {
+        final String key;
+        final T value;
 
-    private static final class SimpleStringMap<T> {
-        private final SimpleStringMap.Node<T>[] values;
+        public Node(String key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    
+
+    public class SimpleStringMap<T> {
+        private final Node<T>[] values;
         private final int valuesMask;
 
-        SimpleStringMap(SimpleStringMap.Node<T>... nodes) {
-            values = (SimpleStringMap.Node<T>[]) new SimpleStringMap.Node[findNextPositivePowerOfTwo(nodes.length)];
+        public SimpleStringMap(Node<T>... nodes) {
+            values = (Node<T>[]) new Node[findNextPositivePowerOfTwo(nodes.length)];
             valuesMask = values.length - 1;
-            for (SimpleStringMap.Node<T> node : nodes) {
+            for (Node<T> node : nodes) {
                 int i = hashCode(node.key) & valuesMask;
                 if (values[i] != null) {
                     throw new IllegalArgumentException("index " + i + " collision between values: [" +
@@ -127,27 +146,19 @@ public class HttpMethodMapBenchmark extends AbstractMicrobenchmark {
             }
         }
 
-        T get(String name) {
-            SimpleStringMap.Node<T> node = values[hashCode(name) & valuesMask];
+        public T get(String name) {
+            Node<T> node = values[hashCode(name) & valuesMask];
             return node == null || !node.key.equals(name) ? null : node.value;
         }
 
-        private static int hashCode(String name) {
+        private int hashCode(String name) {
             // This hash code needs to produce a unique index for each HttpMethod. If new methods are added this
             // algorithm will need to be adjusted. The goal is to have each enum name's hash value correlate to a unique
             // index in the values array.
             return name.hashCode() >>> 6;
         }
 
-        private static final class Node<T> {
-            final String key;
-            final T value;
-
-            Node(String key, T value) {
-                this.key = key;
-                this.value = value;
-            }
-        }
+        
     }
 
     @Benchmark
