@@ -33,18 +33,18 @@ import java.util.Random;
 @State(Scope.Benchmark)
 public class ByteBufAllocatorBenchmark extends AbstractMicrobenchmark {
 
-    private static final ByteBufAllocator unpooledAllocator = new UnpooledByteBufAllocator(true);
-    private static final ByteBufAllocator pooledAllocator =
+    private static ByteBufAllocator unpooledAllocator = new UnpooledByteBufAllocator(true);
+    private static ByteBufAllocator pooledAllocator =
             new PooledByteBufAllocator(true, 4, 4, 8192, 11, 0, 0, 0, true, 0); // Disable thread-local cache
 
-    private static final int MAX_LIVE_BUFFERS = 8192;
-    private static final Random rand = new Random();
-    private static final ByteBuf[] unpooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
-    private static final ByteBuf[] unpooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
-    private static final ByteBuf[] pooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
-    private static final ByteBuf[] pooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
-    private static final ByteBuf[] defaultPooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
-    private static final ByteBuf[] defaultPooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static int MAX_LIVE_BUFFERS = 8192;
+    private static Random rand = new Random();
+    private static ByteBuf[] unpooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static ByteBuf[] unpooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static ByteBuf[] pooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static ByteBuf[] pooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static ByteBuf[] defaultPooledHeapBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
+    private static ByteBuf[] defaultPooledDirectBuffers = new ByteBuf[MAX_LIVE_BUFFERS];
 
     @Param({ "00000", "00256", "01024", "04096", "16384", "65536" })
     public int size;

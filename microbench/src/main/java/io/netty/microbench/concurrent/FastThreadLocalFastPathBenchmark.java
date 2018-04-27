@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package io.netty.microbench.concurrent;
+package ;
 
 import io.netty.microbench.util.AbstractMicrobenchmark;
 import io.netty.util.concurrent.FastThreadLocal;
@@ -33,9 +33,9 @@ public class FastThreadLocalFastPathBenchmark extends AbstractMicrobenchmark {
     private static final Random rand = new Random();
 
     @SuppressWarnings("unchecked")
-    private static final ThreadLocal<Integer>[] jdkThreadLocals = new ThreadLocal[128];
+    private static ThreadLocal<Integer>[] jdkThreadLocals = new ThreadLocal[128];
     @SuppressWarnings("unchecked")
-    private static final FastThreadLocal<Integer>[] fastThreadLocals = new FastThreadLocal[jdkThreadLocals.length];
+    private static FastThreadLocal<Integer>[] fastThreadLocals = new FastThreadLocal[jdkThreadLocals.length];
 
     static {
         for (int i = 0; i < jdkThreadLocals.length; i ++) {

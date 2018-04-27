@@ -33,9 +33,9 @@ public class FastThreadLocalSlowPathBenchmark extends AbstractMicrobenchmark {
     private static final Random rand = new Random();
 
     @SuppressWarnings("unchecked")
-    private static final ThreadLocal<Integer>[] jdkThreadLocals = new ThreadLocal[128];
+    private static ThreadLocal<Integer>[] jdkThreadLocals = new ThreadLocal[128];
     @SuppressWarnings("unchecked")
-    private static final FastThreadLocal<Integer>[] fastThreadLocals = new FastThreadLocal[jdkThreadLocals.length];
+    private static FastThreadLocal<Integer>[] fastThreadLocals = new FastThreadLocal[jdkThreadLocals.length];
 
     static {
         for (int i = 0; i < jdkThreadLocals.length; i ++) {
