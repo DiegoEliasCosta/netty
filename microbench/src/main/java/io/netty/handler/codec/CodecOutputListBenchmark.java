@@ -43,21 +43,18 @@ public class CodecOutputListBenchmark extends AbstractMicrobenchmark {
     public void codecOutList() {
     	codecOutputList = CodecOutputList.newInstance();
         benchmarkAddAndClear(codecOutputList, elements);
-        codecOutputList.recycle();
     }
 
     @Benchmark
     public void recyclableArrayList() {
     	recycleableArrayList = RecyclableArrayList.newInstance(16);
         benchmarkAddAndClear(recycleableArrayList, elements);
-        recycleableArrayList.recycle();
     }
 
     @Benchmark
     public void arrayList() {
     	arrayList = new ArrayList<Object>(16);
         benchmarkAddAndClear(arrayList, elements);
-        // no recycle needed
     }
 
     private static void benchmarkAddAndClear(List<Object> list, int elements) {

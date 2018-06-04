@@ -15,11 +15,13 @@
  */
 package io.netty.microbench.headers;
 
-import io.netty.handler.codec.Headers;
-import io.netty.handler.codec.http.DefaultHttpHeaders;
-import io.netty.handler.codec.http2.DefaultHttp2Headers;
-import io.netty.microbench.util.AbstractMicrobenchmark;
-import io.netty.util.AsciiString;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -35,12 +37,11 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import io.netty.handler.codec.Headers;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http2.DefaultHttp2Headers;
+import io.netty.microbench.util.AbstractMicrobenchmark;
+import io.netty.util.AsciiString;
 
 @Threads(1)
 @State(Scope.Benchmark)
