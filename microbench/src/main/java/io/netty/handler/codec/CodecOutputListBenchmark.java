@@ -39,34 +39,25 @@ public class CodecOutputListBenchmark extends AbstractMicrobenchmark {
     @Param({ "1", "4" })
     public int elements;
 
-    // This Invocation was completely unnecessary
-    // @Setup(Level.INVOCATION)
-    @Setup
-    public void setup() {
-        codecOutputList = CodecOutputList.newInstance();
-        recycleableArrayList = RecyclableArrayList.newInstance(16);
-        arrayList = new ArrayList<Object>(16);
-    }
-
-    @TearDown
-    public void destroy() {
-        codecOutputList.recycle();
-        recycleableArrayList.recycle();
-    }
-
     @Benchmark
     public void codecOutList() {
+    	codecOutputList = CodecOutputList.newInstance();
         benchmarkAddAndClear(codecOutputList, elements);
+        codecOutputList.recycle();
     }
 
     @Benchmark
     public void recyclableArrayList() {
+    	recycleableArrayList = RecyclableArrayList.newInstance(16);
         benchmarkAddAndClear(recycleableArrayList, elements);
+        recycleableArrayList.recycle();
     }
 
     @Benchmark
     public void arrayList() {
+    	arrayList = new ArrayList<Object>(16);
         benchmarkAddAndClear(arrayList, elements);
+        // no recycle needed
     }
 
     private static void benchmarkAddAndClear(List<Object> list, int elements) {

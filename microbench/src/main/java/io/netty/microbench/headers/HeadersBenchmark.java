@@ -102,14 +102,6 @@ public class HeadersBenchmark extends AbstractMicrobenchmark {
         emptyHttp2HeadersNoValidate = new DefaultHttp2Headers(false);
     }
 
-//    @Setup(Level.Invocation)
-//    public void setupEmptyHeaders() {
-//        emptyHttpHeaders.clear();
-//        emptyHttp2Headers .clear();
-//        emptyHttpHeadersNoValidate.clear();
-//        emptyHttp2HeadersNoValidate.clear();
-//    }
-
     @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     public void httpRemove(Blackhole bh) {
