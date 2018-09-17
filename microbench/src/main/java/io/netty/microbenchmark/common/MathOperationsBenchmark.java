@@ -19,8 +19,8 @@ import org.openjdk.jmh.annotations.Benchmark;
 
 public class MathOperationsBenchmark extends AbstractMicrobenchmark {
     private int index;
-    private final int length = 1 << 20;
-    private final int mask = length - 1;
+    private int length = 1 << 20;
+    private int mask = length - 1;
 
     @Benchmark
     public int nextIndexNoConditionals() {
