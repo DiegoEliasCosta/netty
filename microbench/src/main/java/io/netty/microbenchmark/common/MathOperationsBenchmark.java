@@ -18,9 +18,9 @@ import io.netty.microbench.util.AbstractMicrobenchmark;
 import org.openjdk.jmh.annotations.Benchmark;
 
 public class MathOperationsBenchmark extends AbstractMicrobenchmark {
-    private int index;
-    private int length = 1 << 20;
-    private int mask = length - 1;
+    public int index;
+    public int length = 1 << 20;
+    public int mask = length - 1;
 
     @Benchmark
     public int nextIndexNoConditionals() {
